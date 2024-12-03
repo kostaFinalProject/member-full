@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: soccer
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/soccer
+    username: root
+    password: 1234
+
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    database: mysql
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
+  redis:
+    host: localhost
+    port: 6379
+
+  jwt:
+    secret-key: "4fcb69786e14762d0e2b86561fca5bfa258ff929f658dcfbe2a535285ffce3ad"
+#    refresh-token-validity-in-seconds: 1209630 # 14일
+#    access-token-validity-in-seconds: 43200 # 12시간
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
+#    org.springframework.web: DEBUG
+#    org.hibernate: DEBUG
+#    com.zaxxer.hikari: DEBUG
+#    com.p6spy: DEBUG
