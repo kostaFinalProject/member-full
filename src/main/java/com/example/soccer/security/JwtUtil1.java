@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -20,15 +21,13 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtUtil2 {
+public class JwtUtil {
 
-//    private final JwtProperties jwtProperties;
     private final RedisTemplate<String, Object> redisTemplate;
-//    private String secretKey = "default-secret-key"; // 임시 비밀키
     private final TokenService tokenService;
 
     @Value("${spring.jwt.secret-key}") // properties 또는 환경 변수에서 값을 가져올 수 있으며, 두 곳에 모두 값이 있다면, 환경 변수가 yml/properties 파일보다 우선시
-    private String encodedSecretKey; // 이거 입력하면 계속 충돌남 > 이미 생성되어 있어서 그런듯
+    private String encodedSecretKey;
 
     @PostConstruct
     public void checkSecretKey() {
@@ -38,39 +37,21 @@ public class JwtUtil2 {
         System.out.println("Loaded Secret Key: " + encodedSecretKey);
     }
 
-    @PostConstruct
-    public void testRedis() {
-        redisTemplate.opsForValue().set("testKey", "testValue", 10, TimeUnit.SECONDS);
-        System.out.println("Test Redis Value: " + redisTemplate.opsForValue().get("testKey"));
-    }
-
-//    // SecretKey를 가져오는 메서드
-//    private SecretKey getSecretKey() { // nullexception 해결을 위한
-////        String encodedSecretKey= jwtProperties.getSecretKey();
-//        if (encodedSecretKey == null || encodedSecretKey.isEmpty()) {
-//            throw new IllegalArgumentException("Secret Key is missing.");
-//        }
-//        byte[] keyBytes = Base64.getDecoder().decode(encodedSecretKey);
-//        return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
-//    }
     // 인증키가 디코더 변환이 필요할 때
     private SecretKey getSecretKey() {
         byte[] keyBytes = Base64.getDecoder().decode(encodedSecretKey);
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
-    //     비밀키가 문자열일 때
-//    public SecretKey getSecretKey() {
-//        String secretKeyString = "your-secret-key";  // application.yml에서 가져온 비밀 키
-//        return new SecretKeySpec(secretKeyString.getBytes(), SignatureAlgorithm.HS256.getJcaName());
-//    }
 
     // Access Token 발급 (기본 만료 시간: 15분)
-    public String generateToken(String userId) {
+    public String generateToken(Authentication authentication) {
+        String userId = authentication.getName(); // Authentication 객체에서 userId를 가져옴
         return generateToken(userId, 1000 * 60 * 15);
     }
 
     // Refresh Token 발급 (기본 만료 시간: 7일)
-    public String generateRefreshToken(String userId) {
+    public String generateRefreshToken(Authentication authentication) {
+        String userId = authentication.getName(); // Authentication 객체에서 userId를 가져옴
         String refreshToken = generateToken(userId, 1000 * 60 * 60 * 24 * 7);
         saveRefreshToken(userId, refreshToken);
         return refreshToken;
@@ -113,7 +94,7 @@ public class JwtUtil2 {
         }
     }
 
-    // 토큰에서 이메일(사용자 정보) 추출
+    // 토큰에서 사용자 정보 (userId) 추출
     public String extractUsername(String token) {
         try {
             return Jwts.parserBuilder()
@@ -164,13 +145,13 @@ public class JwtUtil2 {
         }
     }
 
-
     // Refresh Token 재생성 및 저장 (기존 토큰 무효화)
-    public String regenerateRefreshToken(String userId) {
+    public String regenerateRefreshToken(Authentication authentication) {
+        String userId = authentication.getName(); // Authentication 객체에서 userId를 가져옴
         try {
             redisTemplate.delete("refreshToken:" + userId); // 기존 Refresh Token 삭제
             log.debug("Old refresh token deleted for userId: {}", userId);
-            String newRefreshToken = generateRefreshToken(userId);
+            String newRefreshToken = generateRefreshToken(authentication); // 새로운 Refresh Token 발급
             saveRefreshToken(userId, newRefreshToken);
             log.debug("New Refresh Token Generated: {}", newRefreshToken);
             return newRefreshToken;
