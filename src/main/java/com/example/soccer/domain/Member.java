@@ -28,7 +28,7 @@ public class Member {
     @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
 
@@ -36,12 +36,13 @@ public class Member {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "photo")
-    private String photo;
+    @Column(name = "profile")
+    private String profile;
 
     @Embedded
     private Address address;
 
+    // 자동 입력 값
     @Column(name = "point")
     private int point; // 기본값 0(스택) cf. integer : null(힙)
 
@@ -56,6 +57,11 @@ public class Member {
 
     private int follower_count;
 
+    private String type;
+
+    @Column(unique = true)
+    private String memberKey;
+
 
     @Builder
     private Member(String userId,
@@ -64,25 +70,29 @@ public class Member {
                    String nickname,
                    String email,
                    String phone,
-                   String photo,
+                   String profile,
                    Address address,
                    int point,
                    PointGrade pointGrade,
                    int report_count,
-                   int follower_count) {
+                   int follower_count,
+//                   String type, // > 왜 안넣어도 되는가
+                   String memberKey) {
         this.userId = userId;
         this.password=password;
         this.name=name;
         this.nickname=nickname;
         this.email=email;
         this.phone=phone;
-        this.photo=photo;
+        this.profile=profile;
         this.address=address;
         this.point=point;
         this.pointGrade=pointGrade;
         this.grade=Grade.USER;
         this.report_count=report_count;
         this.follower_count=follower_count;
+        this.type="app";
+        this.memberKey=memberKey;
     }
 
     /**

@@ -90,4 +90,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
+    // userId로 받을 때
+    private void setAuthentication(String userId) {
+        // userId를 이용해 Authentication 객체를 생성 후 SecurityContext에 설정
+        var userDetails = customUserDetailsService.loadUserByUsername(userId);
+        var authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    // 토큰을 추출하는 부분도 필요에 따라 수정 가능
+    private String resolveToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) {
+            return null;
+        }
+        return token.substring(7); // "Bearer "를 제거하고 반환
+    }
+    // 객체로 받을 때
+//    private void setAuthentication(String accessToken) {
+//        Authentication authentication = jwtUtil.getAuthentication(accessToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//    }
+//
+//    private String resolveToken(HttpServletRequest request) {
+//        String token = request.getHeader(AUTHORIZATION);
+//        if (ObjectUtils.isEmpty(token) || !token.startsWith(TokenKey.TOKEN_PREFIX)) {
+//            return null;
+//        }
+//        return token.substring(TokenKey.TOKEN_PREFIX.length());
+//    }
 }

@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberSignUpFormDto {
+public class
+MemberSignUpFormDto {
     private String userId;
     private String password;
     private String name;

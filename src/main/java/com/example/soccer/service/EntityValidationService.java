@@ -25,22 +25,21 @@ public class EntityValidationService {
     // 암호화된 비밀번호와 입력된 비밀번호 비교
     public boolean existPassword(String userId, String password) {
         // UserId로 회원 정보 찾기 - null을 직접 처리하지 않고 안전하게 값을 다룰 수 있게 도와
-        Optional<Member> memberOptional = memberRepository.findByUserId(userId);
-        // > 디버깅해야함
+        Member memberOptional = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        // 회원이 없으면 false 반환 - 디버깅해야함
-        if (!memberOptional.isPresent()) {
-            return false; // 회원이 존재하지 않으면 비밀번호도 틀린 것
-        }
 
         // 저장된 암호화된 비밀번호
-        String storedPassword = memberOptional.get().getPassword();
+        String storedPassword = memberOptional.getPassword();
         System.out.println("Stored Password: " + storedPassword); // 디버깅: 저장된 암호화 비밀번호
         System.out.println("Input Password: " + password);        // 디버깅: 사용자가 입력한 비밀번호
 
         // 입력된 비밀번호와 암호화된 비밀번호를 비교
+        // 입력된 비밀번호와 암호화된 비밀번호 비교
+        // 비밀번호가 일치하면 true 반환
+        // 비밀번호가 불일치하면 false 반환
         return bCryptPasswordEncoder.matches(password, storedPassword);
-    }
+    } // 일치하면 true(0) // 불일치하면 false(1) 반환
 
     // 동일 닉네임 검증
     public boolean existNickname(String nickname) { return memberRepository.existsByNickname(nickname); }

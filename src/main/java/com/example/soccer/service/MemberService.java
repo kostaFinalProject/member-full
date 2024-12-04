@@ -44,26 +44,26 @@ public class MemberService {
         );
         memberRepository.save(member);
     }
-    /** 회원가입 시 중복 조회 */
+    /** 회원가입 시 중복 조회 */ // front 입력 값과 DB 값 비교
     public boolean checkMember(MemberSignCheckDto signCheckDto) {
         // 아이디 중복 체크
         if (entityValidationService.existUserId(signCheckDto.getUserId())) {
-            return false;  // 아이디가 중복되면 false 반환
+            return false;  // 아이디 중복(true)되면 false 1 반환
         }
         // 현재 비밀번호 확인 (비밀번호는 입력된 비밀번호와 암호화된 비밀번호를 비교)
         if (entityValidationService.existPassword(signCheckDto.getUserId(), signCheckDto.getPassword())) {
-            return false;  // 비밀번호가 맞으면 false 반환
+            return false;  // 비밀번호 일치하면 false 1 반환
         }
         // 현재 닉네임 확인
         if (entityValidationService.existNickname(signCheckDto.getNickname())) {
-            return false;  // 닉네임이 확인되면 false 반환
+            return false;  // 닉네임 중복되면 false 1 반환
         }
         // 이메일 중복 체크
         if (entityValidationService.existEmail(signCheckDto.getEmail())) {
-            return false;  // 이메일이 중복되면 false 반환
+            return false;  // 이메일 중복되면 false 1 반환
         }
         // 중복이 없으면 true 반환
-        return true;
+        return true; // 0(사용가능) - false 1(중복존재)  * 비밀번호 번호 일치 false 1 반환
     }
     /** 회원 조회 */
     public MemberResponseDto getMember(Long memberId) {

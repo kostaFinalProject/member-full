@@ -30,6 +30,37 @@ spring:
 
   jwt:
     secret-key: "4fcb69786e14762d0e2b86561fca5bfa258ff929f658dcfbe2a535285ffce3ad"
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 216109154511553a2ac3e876eb1362fb  # 카카오 개발자 콘솔에서 발급받은 REST API Key
+            client-secret: X4zWLUAMkWehfT2AoSaTePNs3nrolWpj  # 카카오 앱의 비밀키 (선택 사항)
+            redirect-uri: "http://127.0.0.1:5500/main.html"  # Redirect URI 설정 (예: http://localhost:8080/login/oauth2/code/kakao)
+            authorization-grant-type: authorization_code  # 권한 부여 유형 (코드 기반 인증)
+            client-authentication-method: client_secret_post
+            scope: profile_nickname, profile_image, account_email  # 요청할 권한 범위
+#            client-name: Kakao  # 클라이언트 이름 (선택 사항)
+          naver:
+            client-id: INK5Ren5sHqo2XHb5Bw2  # 카카오 개발자 콘솔에서 발급받은 REST API Key
+            client-secret: VYMufxc_Nw  # 카카오 앱의 비밀키 (선택 사항)
+            redirect-uri: "http://127.0.0.1:5500/main.html"  # Redirect URI 설정 (예: http://localhost:8080/login/oauth2/code/naver)
+            authorization-grant-type: authorization_code  # 권한 부여 유형 (코드 기반 인증)
+            scope: email  # 요청할 권한 범위
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize  # 카카오 인증 서버 URI
+            token-uri: https://kauth.kakao.com/oauth/token  # 카카오 토큰 발급 URI
+            user-info-uri: https://kapi.kakao.com/v2/user/me  # 카카오 사용자 정보 조회 URI
+            user-name-attribute: id  # 사용자 정보에서 id를 기준으로 사용자 정보 제공
+          naver:
+            authorization-uri: https://nid.naver.com/oauth2.0/authorize  # 카카오 인증 서버 URI
+            token-uri: https://nid.naver.com/oauth2.0/token  # 카카오 토큰 발급 URI
+            user-info-uri: https://nid.naver.com/v1/user/me  # 카카오 사용자 정보 조회 URI
+            user-name-attribute: response  # 사용자 정보에서 id를 기준으로 사용자 정보 제공
+
 #    refresh-token-validity-in-seconds: 1209630 # 14일
 #    access-token-validity-in-seconds: 43200 # 12시간
 #logging:

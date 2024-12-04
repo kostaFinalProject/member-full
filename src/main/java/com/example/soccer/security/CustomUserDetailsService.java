@@ -3,11 +3,20 @@ package com.example.soccer.security;
 import com.example.soccer.domain.Member;
 import com.example.soccer.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
+//import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationFilter;
+//import org.springframework.security.oauth2.client.registration.OAuth2UserRequest;
 
 @Service
 @Primary
@@ -22,6 +31,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
         return new CustomUserDetails(member);
     }
+
+
 
 //    // 회원가입 우회 처리하려 했으나 시큐리티로 해결
 //    @Override

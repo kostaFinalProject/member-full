@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    // 회원가입 아이디, 닉네임, 이메일, 비밀번호 중복확인
+    /** 회원가입 아이디, 닉네임, 이메일, 비밀번호 중복확인 */
     @PostMapping("/signcheck")
     public ResponseEntity<?> checkMember(@RequestBody MemberSignCheckDto signCheckDto) {
 
@@ -34,7 +34,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(1);  // 중복 존재
         }
     }
-    // 회원가입
+    /** 회원 가입 */
     @PostMapping("/signup")
     public ResponseEntity<?> saveMember(@RequestBody MemberSignUpFormDto signUpFormDto){
         memberService.saveMember(signUpFormDto);

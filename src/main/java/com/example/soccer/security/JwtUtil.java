@@ -20,12 +20,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtUtil2 {
+public class JwtUtil {
 
 //    private final JwtProperties jwtProperties;
     private final RedisTemplate<String, Object> redisTemplate;
 //    private String secretKey = "default-secret-key"; // 임시 비밀키
-    private final TokenService tokenService;
+//    private final TokenService tokenService; > 순환의존성
 
     @Value("${spring.jwt.secret-key}") // properties 또는 환경 변수에서 값을 가져올 수 있으며, 두 곳에 모두 값이 있다면, 환경 변수가 yml/properties 파일보다 우선시
     private String encodedSecretKey; // 이거 입력하면 계속 충돌남 > 이미 생성되어 있어서 그런듯
