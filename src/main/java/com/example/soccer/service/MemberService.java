@@ -66,8 +66,8 @@ public class MemberService {
         return true; // 0(사용가능) - false 1(중복존재)  * 비밀번호 번호 일치 false 1 반환
     }
     /** 회원 조회 */
-    public MemberResponseDto getMember(Long memberId) {
-        Member findMember = entityValidationService.validateMember(memberId);
+    public MemberResponseDto getMember(String userId) {
+        Member findMember = entityValidationService.validateMember(userId);
 
         return MemberResponseDto.readMemberResponseDto(
                 findMember.getUserId(),
@@ -81,12 +81,12 @@ public class MemberService {
         );
     }
     /** 회원 수정 */
-    public void updateMember(Long memberId, MemberUpdateFormDto memberUpdateFormDto) {
+    public void updateMember(String userId, MemberUpdateFormDto memberUpdateFormDto) {
         // memberId를 통해 기존 회원을 조회하고 유효성 검사
-        Member findMember = entityValidationService.validateMember(memberId);
+        Member findMember = entityValidationService.validateMember(userId);
 
         // 중복된 닉네임으로 수정 가능
-        boolean isNicknameValidate = entityValidationService.existNicknameExceptMe(memberUpdateFormDto.getNickname(), memberId);
+        boolean isNicknameValidate = entityValidationService.existNicknameExceptMe(memberUpdateFormDto.getNickname(), userId);
 
         // 기존 값들과 비교
         boolean isSamePassword = bCryptPasswordEncoder.matches(memberUpdateFormDto.getPassword(), findMember.getPassword());
@@ -130,7 +130,7 @@ public class MemberService {
         }
 
         String accessToken = tokenService.generateAccessToken(member.getEmail());
-        String refreshToken = tokenService.generateRefreshToken(member.getEmail());
+        String refreshToken = tokenService.generateRefreshToken(member.getEmail(), accessToken);
 
         return accessToken + ":" + refreshToken;
     }
@@ -138,4 +138,5 @@ public class MemberService {
     public String refreshAccessToken(String refreshToken) {
         return tokenService.refreshAccessToken(refreshToken);
     }
+
 }

@@ -12,7 +12,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 암호화 비밀번호 동일 검증 - userId로 회원을 찾는 메서드
     Optional<Member> findByUserId(String userId); // 객체 반환 null 값 허용
 
-    // 현재 비밀번호 확인
+    // 현재 비밀번호 확인 > 복호화 후 리포지터리에서 조회를 제대로 못하는걸까?
 //    boolean existsByPassword(String password);
 //    Optional<Member> findByPassword(String password);
 
@@ -25,6 +25,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
 
     // 자신을 제외한 닉네임 검증                           > 이거 long type 맞나
-    boolean existsByNicknameAndIdNot(String nickname, Long id);
-    Optional<Member> findByNicknameAndIdNot(String nickname, Long id);
+    boolean existsByNicknameAndUserIdNot(String nickname, String userId);
+    Optional<Member> findByNicknameAndUserIdNot(String nickname, String userId);
+    
+    // 멤버키
+    Optional<Member> findByMemberKey(String memberKey);
 }

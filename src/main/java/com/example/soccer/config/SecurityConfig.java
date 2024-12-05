@@ -22,8 +22,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,6 +60,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtil, customUserDetailsService);
+        System.out.println("JWT Authentication Filter initialized: " + jwtAuthenticationFilter);
         http
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 비활성화
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -65,7 +68,8 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
 //                        config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://127.0.0.1:5500")); > 안된다
-                        config.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5500"));
+//                        config.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5500"));
+                        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "https://kauth.kakao.com"));
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
@@ -102,39 +106,37 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/items/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/items/**").hasAuthority("ADMIN")
                         // oauth
-//                        .requestMatchers(
-//                                new AntPathRequestMatcher("/"),
-//                                new AntPathRequestMatcher("/auth/success"),
-//                                new AntPathRequestMatcher("/auth/failure"),
-//                                new AntPathRequestMatcher("/auth/login/kakao/**")
-//                        ).permitAll()
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/auth/success"),
+                                new AntPathRequestMatcher("/auth/failure"),
+                                new AntPathRequestMatcher("/auth/login/kakao/**")
+                        ).permitAll()
                         .requestMatchers(allowUrls).permitAll()  // 허용 URL 설정
                         // 그 외 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
                 // oauth2 설정
+//                .oauth2Login(oauth -> oauth
+//                        .loginPage("/login")  // 선택 사항: 로그인 페이지 커스터마이즈
+//                        .authorizationEndpoint(authorization ->
+//                                authorization.baseUri("/oauth2/authorization"))  // 인증 엔드포인트 설정
+//                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+//                        .successHandler(oAuth2SuccessHandler)  // 로그인 성공 핸들러 설정
+//                )
                 .oauth2Login(oauth -> oauth
-                        .loginPage("/login")  // 선택 사항: 로그인 페이지 커스터마이즈
-                        .authorizationEndpoint(authorization ->
-                                authorization.baseUri("/oauth2/authorization"))  // 인증 엔드포인트 설정
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler)  // 로그인 성공 핸들러 설정
+                        .successHandler(oAuth2SuccessHandler)
                 )
-
 //                .oauth2Login(oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
 //                        // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정을 담당
 //                        oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))
 //                                // 로그인 성공 시 핸들러
 //                                .successHandler(oAuth2SuccessHandler)
 //                )
-//                .oauth2Login(oauth2 -> oauth2
-//                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/**"))
-//                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))  // OAuth2UserService 설정
-//                )
-
-                .formLogin(AbstractHttpConfigurer::disable)  // 기본 로그인 폼 비활성화
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션 사용 안 함 (JWT 인증)
+//                .formLogin(AbstractHttpConfigurer::disable)  // 기본 로그인 폼 비활성화
+//                .sessionManagement(session ->
+//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션 사용 안 함 (JWT 인증)
 //                .sessionManagement(c ->
 //                c.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용하지 않음
                 // jwt 관련 설정
@@ -147,8 +149,6 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .logout(AbstractHttpConfigurer::disable);  // 로그아웃 비활성화
-
-
         return http.build();
     }
 

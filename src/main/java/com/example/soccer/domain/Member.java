@@ -59,7 +59,7 @@ public class Member {
 
     private String type;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true) // memberKey는 이메일이나 다른 민감한 정보를 외부에 노출하지 않고, 사용자를 식별할 수 있는 비공개 키로 활용
     private String memberKey;
 
 

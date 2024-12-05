@@ -43,17 +43,17 @@ public class MemberController {
     }
 
     /** 회원 조회 */
-    @GetMapping("/{memberId}")
-    public ResponseEntity<?> getMember(@PathVariable Long memberId) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getMember(@PathVariable String userId) {
         // 요청에서 직접 전달된 memberId 사용
-        MemberResponseDto responseDto = memberService.getMember(memberId);
+        MemberResponseDto responseDto = memberService.getMember(userId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
     /** 회원 수정 */
-    @PutMapping("/{memberId}") // Long은 null값을 허용
-    public ResponseEntity<?> updateMember(@PathVariable Long memberId,
+    @PutMapping("/{userId}") // Long은 null값을 허용
+    public ResponseEntity<?> updateMember(@PathVariable String userId,
                                           @RequestBody MemberUpdateFormDto updateFormDto) {
-        memberService.updateMember(memberId, updateFormDto);
+        memberService.updateMember(userId, updateFormDto);
         return ResponseEntity.status(HttpStatus.OK).body("회원 정보가 수정되었습니다.");
     }
     /** 로그인 */

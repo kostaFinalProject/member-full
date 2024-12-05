@@ -55,13 +55,13 @@ public class EntityValidationService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
     // Member 검증
-    public Member validateMember(Long memberId) {
-        return memberRepository.findById(memberId)
+    public Member validateMember(String userId) {
+        return memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회원입니다."));
     }
 
     // 동일 닉네임 검증 - 내 자신은 빼고
-    public boolean existNicknameExceptMe(String nickname, Long memberId) {
-        return memberRepository.existsByNicknameAndIdNot(nickname, memberId); // true
+    public boolean existNicknameExceptMe(String nickname, String userId) {
+        return memberRepository.existsByNicknameAndUserIdNot(nickname, userId); // true
     }
 }
