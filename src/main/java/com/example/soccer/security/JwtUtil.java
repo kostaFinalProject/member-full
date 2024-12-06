@@ -87,7 +87,7 @@ public class JwtUtil {
     }
 
 
-    // Access Token 발급 (기본 만료 시간: 15분)
+    // 일반 로그인 :  Access Token 발급 (기본 만료 시간: 15분)
     public String generateAccessToken(String userId) {
         return generateToken(userId, 1000 * 60 * 15);
     }

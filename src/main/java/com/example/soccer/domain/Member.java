@@ -1,6 +1,7 @@
 package com.example.soccer.domain;
 
 
+import com.example.soccer.security.KeyGenerator;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -115,7 +116,9 @@ public class Member {
                                 .nickname(nickname)
                                 .email(email)
                                 .phone(phone)
-                                .address(address).build();
+                                .address(address)
+                                .memberKey(KeyGenerator.generateKey()) // 멤버키 생성
+                                .build();
     }
     public void updateMember(String password,
                              String nickname,

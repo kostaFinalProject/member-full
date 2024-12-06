@@ -20,8 +20,10 @@ public record OAuth2UserInfo(
         String email
 //        String profile
 ) {
-
+                                        // registrationId는 "kakao"
     public static OAuth2UserInfo of(String registrationId, Map<String, Object> attributes) {
+        System.out.println("Registration ID: " + registrationId);
+        System.out.println("Full Attributes: " + attributes);
         return switch (registrationId) {
 //            case "google" -> ofGoogle(attributes);
             case "kakao" -> ofKakao(attributes);
@@ -38,8 +40,10 @@ public record OAuth2UserInfo(
 //    }
 
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
+        System.out.println("Kakao Attributes: " + attributes);
         // 제너릭 오류 발생
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        System.out.println("Kakao Account: " + account);
 //        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
 
 //        Object kakaoAccount = attributes.get("kakao_account");
@@ -53,6 +57,14 @@ public record OAuth2UserInfo(
 //        }
         if (account == null) {
             throw new IllegalArgumentException("kakao_account is missing in attributes");
+        }
+        // 안전한 이메일 추출
+        String email = account != null && account.containsKey("email")
+                ? (String) account.get("email")
+                : null;
+
+        if (email == null) {
+            throw new IllegalArgumentException("Email is missing from Kakao account");
         }
 
         return OAuth2UserInfo.builder()
@@ -68,6 +80,7 @@ public record OAuth2UserInfo(
                 .email(email)
 //                .profile(profile)
                 .memberKey(KeyGenerator.generateKey()) // memberKey는 애플리케이션에서 사용되는 외부 식별자로 사용될 수 있다. ex) 고객 코드, 사용자 번호 등.
+//                .grade(Grade.USER)
                 .build();
     }
 }
