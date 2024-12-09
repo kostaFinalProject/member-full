@@ -45,7 +45,7 @@ public class MemberController {
     /** 회원 조회 */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getMember(@PathVariable String userId) {
-        // 요청에서 직접 전달된 memberId 사용
+        // 요청에서 직접 전달된 userId 사용
         MemberResponseDto responseDto = memberService.getMember(userId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
@@ -64,6 +64,11 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(LoginResponseDto.createLoginResponseDto(
                 "Bearer " + splitTokens[0], "Bearer " + splitTokens[1]));
     }
+// bearer가 있어서 오류가 나는듯? front에서 catch 오류가 나는듯?
+//    {
+//        "accessToken": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0YWVvbjlAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM2NzExNDgsImV4cCI6MTczMzY3MjA0OH0.HGX0lP0vuy4zoYLRr89lCqMxtrFy8MNyJYoIrW-HGGpxUuAQFne9f8CrXsDFrdd4",
+//            "refreshToken": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0YWVvbjlAbmF2ZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM2NzExNDgsImV4cCI6MTczNDI3NTk0OH0.rTQLlRz3MR3im9SMXBjW7Xk2DGSGCzB1fY2m-DBMHq-MEc2SQVSsEGcru7-68ks-"
+//    }
     /** Access Token 재발급 */
     @TokenApi
     @PostMapping("/refresh-token")

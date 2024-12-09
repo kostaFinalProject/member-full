@@ -19,11 +19,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
 
-//    public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
-//        this.jwtUtil = jwtUtil;
-//        this.customUserDetailsService = customUserDetailsService;
-//    } > @RequiredArgsConstructor 이거 때문에 생성자 없어도 됨
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

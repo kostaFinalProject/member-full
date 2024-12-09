@@ -3,6 +3,7 @@ package com.example.soccer.security;
 import com.example.soccer.domain.Member;
 import com.example.soccer.dto.login.OAuth2UserInfo;
 import com.example.soccer.repository.MemberRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -10,7 +11,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,12 +44,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 6. OAuth2User로 반환
         return new PrincipalDetails(member, oAuth2UserAttributes, userNameAttributeName);
     }
-
     private Member getOrSave(OAuth2UserInfo oAuth2UserInfo) {
         System.out.println("OAuth2 User Info: " + oAuth2UserInfo);
-        Member member = memberRepository.findByEmail(oAuth2UserInfo.email())
-                .orElseGet(oAuth2UserInfo::toEntity);
-        System.out.println("Saving member: " + member);
+
+        // 이메일로 이미 가입된 회원을 조회 (Optional로 반환)
+        Optional<Member> memberOptional = memberRepository.findByEmail(oAuth2UserInfo.email());
+
+        // 이미 가입된 회원이 있을 경우
+        if (memberOptional.isPresent()) {
+            // 이미 가입된 회원을 그대로 반환
+            return memberOptional.get();
+        }
+
+        // 이미 가입된 회원이 없으면 새 회원 생성
+        Member member = oAuth2UserInfo.toEntity();
         return memberRepository.save(member);
     }
 }

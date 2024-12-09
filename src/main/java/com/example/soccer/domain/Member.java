@@ -1,6 +1,7 @@
 package com.example.soccer.domain;
 
 
+import com.example.soccer.security.KeyGenerator;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,18 +20,17 @@ public class Member {
     @Column(name = "user_id", unique = true, nullable = false)
     private String userId;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
-
 
     // 선택
     @Column(name = "phone")
@@ -76,7 +76,7 @@ public class Member {
                    PointGrade pointGrade,
                    int report_count,
                    int follower_count,
-//                   String type, // > 왜 안넣어도 되는가
+                   String type,
                    String memberKey) {
         this.userId = userId;
         this.password=password;
@@ -91,7 +91,7 @@ public class Member {
         this.grade=Grade.USER;
         this.report_count=report_count;
         this.follower_count=follower_count;
-        this.type="app";
+        this.type=type;
         this.memberKey=memberKey;
     }
 
@@ -115,7 +115,10 @@ public class Member {
                                 .nickname(nickname)
                                 .email(email)
                                 .phone(phone)
-                                .address(address).build();
+                                .address(address)
+                                .type("web")
+                                .memberKey(KeyGenerator.generateKey()) // 멤버키 생성
+                                .build();
     }
     public void updateMember(String password,
                              String nickname,

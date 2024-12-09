@@ -8,6 +8,7 @@ import com.example.soccer.dto.member.MemberSignCheckDto;
 import com.example.soccer.dto.member.MemberSignUpFormDto;
 import com.example.soccer.dto.member.MemberUpdateFormDto;
 import com.example.soccer.repository.MemberRepository;
+import com.example.soccer.security.JwtUtil;
 import com.example.soccer.service.EntityValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +20,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EntityValidationService entityValidationService;
-    private final TokenService tokenService;
+//    private final TokenService tokenService;
+    private final JwtUtil jwtUtil;
 
     /** 회원 가입 */
     public void saveMember(MemberSignUpFormDto memberSingUpFormDto) {
@@ -51,7 +53,7 @@ public class MemberService {
             return false;  // 아이디 중복(true)되면 false 1 반환
         }
         // 현재 비밀번호 확인 (비밀번호는 입력된 비밀번호와 암호화된 비밀번호를 비교)
-        if (entityValidationService.existPassword(signCheckDto.getUserId(), signCheckDto.getPassword())) {
+        if (!entityValidationService.existPassword(signCheckDto.getUserId(), signCheckDto.getPassword())) {
             return false;  // 비밀번호 일치하면 false 1 반환
         }
         // 현재 닉네임 확인
@@ -129,14 +131,13 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = tokenService.generateAccessToken(member.getEmail());
-        String refreshToken = tokenService.generateRefreshToken(member.getEmail(), accessToken);
+        String accessToken = jwtUtil.generateAccessToken(member.getEmail());
+        String refreshToken = jwtUtil.generateRefreshToken(member.getEmail(), accessToken);
 
         return accessToken + ":" + refreshToken;
     }
     /** Access Token 재발급 */
     public String refreshAccessToken(String refreshToken) {
-        return tokenService.refreshAccessToken(refreshToken);
+        return jwtUtil.refreshAccessToken(refreshToken);
     }
-
 }
