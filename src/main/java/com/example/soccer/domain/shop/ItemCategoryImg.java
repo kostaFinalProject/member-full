@@ -20,14 +20,14 @@ public class ItemCategoryImg {
     private String originImgName;
     private String imgUrl;
 
-//    @Builder
-//    private ItemCategoryImg(String imgName, String originImgName, String imgUrl) {
-//        this.imgName = imgName;
-//        this.originImgName = originImgName;
-//        this.imgUrl = imgUrl;
-//    }
-//
-//    public static ItemCategoryImg createItemCategoryImg(String imgName, String originImgName, String imgUrl) {
-//        return ItemCategoryImg.builder().imgName(imgName).originImgName(originImgName).imgUrl(imgUrl).build();
-//    }
+    @Builder
+    private ItemCategoryImg(String imgName, String originImgName, String imgUrl) {
+        this.imgName = imgName;
+        this.originImgName = originImgName;
+        this.imgUrl = imgUrl;
+    }
+
+    public static ItemCategoryImg createItemCategoryImg(String imgName, String originImgName, String imgUrl) {
+        return ItemCategoryImg.builder().imgName(imgName).originImgName(originImgName).imgUrl(imgUrl).build();
+    }
 }

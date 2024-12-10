@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/** 상품 사이즈 */
+/**
+ * 상품 사이즈
+ */
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -27,44 +29,45 @@ public class ItemSize {
 
     private int stockQuantity;
 
-//    @Builder
-//    private ItemSize(Size size, int stockQuantity) {
-//        this.size = size;
-//        this.stockQuantity = stockQuantity;
-//    }
-//
-//    public static ItemSize createItemSize(Size size, int stockQuantity) {
-//        return ItemSize.builder().size(size).stockQuantity(stockQuantity).build();
-//    }
-//
-//    /** 연관 관계 메서드 */
-//    protected void setItem(Item item) {
-//        if (this.item != null) {
-//            this.item.getItemSizes().remove(this);
-//        }
-//
-//        this.item = item;
-//        if (this.item != null && !item.getItemSizes().contains(this)) {
-//            item.getItemSizes().add(this);
-//        }
-//    }
-//
-//    public void updateStockQuantity(int stockQuantity) {
-//        this.stockQuantity = stockQuantity;
-//        this.item.setAllStockQuantity();
-//    }
-//
-//    public void addStock(int quantity) {
-//        this.stockQuantity += quantity;
-//        this.item.setAllStockQuantity();
-//    }
-//
-//    public void removeStock(int quantity) {
-//        int restStock = this.stockQuantity - quantity;
-//        if (restStock < 0) {
-//            throw new NotEnoughStockException("재고가 부족합니다.");
-//        }
-//        this.stockQuantity = restStock;
-//        this.item.setAllStockQuantity();
-//    }
+    @Builder
+    private ItemSize(Size size, int stockQuantity) {
+        this.size = size;
+        this.stockQuantity = stockQuantity;
+    }
+
+    public static ItemSize createItemSize(Size size, int stockQuantity) {
+        return ItemSize.builder().size(size).stockQuantity(stockQuantity).build();
+    }
+
+    /** 연관 관계 메서드 */
+    protected void setItem(Item item) {
+        if (this.item != null) {
+            this.item.getItemSizes().remove(this);
+        }
+
+        this.item = item;
+        if (this.item != null && !item.getItemSizes().contains(this)) {
+            item.getItemSizes().add(this);
+        }
+    }
+
+    public void updateStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+        this.item.setAllStockQuantity();
+    }
+
+    public void addStock(int quantity) {
+        this.stockQuantity += quantity;
+        this.item.setAllStockQuantity();
+    }
+
+    public void removeStock(int quantity) {
+        int restStock = this.stockQuantity - quantity;
+        if (restStock < 0) {
+            throw new NotEnoughStockException("재고가 부족합니다.");
+        }
+        this.stockQuantity = restStock;
+        this.item.setAllStockQuantity();
+    }
 }
+

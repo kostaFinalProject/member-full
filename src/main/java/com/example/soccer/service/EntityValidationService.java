@@ -3,8 +3,12 @@ package com.example.soccer.service;
 import com.example.soccer.domain.Member;
 //import com.example.soccer.domain.shop.Cart;
 //import com.example.soccer.domain.shop.Item;
+import com.example.soccer.domain.shop.Cart;
+import com.example.soccer.domain.shop.Item;
 import com.example.soccer.repository.MemberRepository;
 //import com.example.soccer.repository.cart.CartRepository;
+import com.example.soccer.repository.cart.CartRepository;
+import com.example.soccer.repository.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +18,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class EntityValidationService {
-//    private final CartRepository cartRepository;
+    private final CartRepository cartRepository;
+    private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -60,21 +65,21 @@ public class EntityValidationService {
 //        }
 //    } // 일치하면 true(0) // 불일치하면 false(1) 반환
 
-    // 동일 닉네임 검증
+    /** 동일 닉네임 검증 */
     public boolean existNickname(String nickname) { return memberRepository.existsByNickname(nickname); }
 
-    // 동일 이메일 검증
+    /** 동일 이메일 검증 */
     public boolean existEmail(String email) {
         return memberRepository.existsByEmail(email); // true
     }
 
-    // Member 검증
-    public Member validateMember(String userId) {
-        return memberRepository.findByUserId(userId)
+    /** Member 검증 */
+    public Member validateMember(Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회원입니다."));
     }
 
-    /** Member UserId로 검증 - 로그인 */
+    /** Member UserId로 검증 - 로그인, 회원 조회, 회원 수정 */
     public Member validateMemberByUserId(String userId) {
         return memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -91,14 +96,14 @@ public class EntityValidationService {
         return memberRepository.existsByNicknameAndUserIdNot(nickname, userId); // true
     }
 
-//    // Item 검증
-//    public Item validateItem(Long itemId) {
-//        return itemRepository.findById(itemId)
-//                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품입니다."));
-//    }
+    // Item 검증
+    public Item validateItem(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품입니다."));
+    }
 
-//    public Cart validateCart(Long cartItemId) {
-//        return cartRepository.findById(cartItemId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 항목을 찾을 수 없습니다."));
-//    }
+    public Cart validateCart(Long cartItemId) {
+        return cartRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 항목을 찾을 수 없습니다."));
+    }
 }

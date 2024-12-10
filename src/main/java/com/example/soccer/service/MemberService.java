@@ -70,7 +70,7 @@ public class MemberService {
     }
     /** 회원 조회 */
     public MemberResponseDto getMember(String userId) {
-        Member findMember = entityValidationService.validateMember(userId);
+        Member findMember = entityValidationService.validateMemberByUserId(userId);
 
         return MemberResponseDto.readMemberResponseDto(
                 findMember.getUserId(),
@@ -86,7 +86,7 @@ public class MemberService {
     /** 회원 수정 */
     public void updateMember(String userId, MemberUpdateFormDto memberUpdateFormDto) {
         // memberId를 통해 기존 회원을 조회하고 유효성 검사
-        Member findMember = entityValidationService.validateMember(userId);
+        Member findMember = entityValidationService.validateMemberByUserId(userId);
 
         // 중복된 닉네임으로 수정 가능
         boolean isNicknameValidate = entityValidationService.existNicknameExceptMe(memberUpdateFormDto.getNickname(), userId);

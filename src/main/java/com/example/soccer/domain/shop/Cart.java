@@ -27,24 +27,24 @@ public class Cart {
     @Column(name="count")
     private int count;
 
-//    @Builder
-//    private Cart(Member member, Item item, int count) {
-//        this.member = member;
-//        this.item = item;
-//        this.count = count;
-//    }
-//
-//    // Cart 생성 메서드
-//    public static Cart createCart(Member member, Item item, int count) {
-//        return Cart.builder()
-//                .member(member)
-//                .item(item)
-//                .count(count)
-//                .build();
-//    }
-//
-//    // Cart update
-//    public void updateCount(int count) {
-//        this.count = count;
-//    }
+    @Builder
+    private Cart(Member member, Item item, int count) {
+        this.member = member;
+        this.item = item;
+        this.count = count;
+    }
+
+    // Cart 생성 메서드
+    public static Cart createCart(Member member, Item item, int count) {
+        return Cart.builder()
+                .member(member)
+                .item(item)
+                .count(count)
+                .build();
+    }
+
+    // Cart update
+    public void updateCount(int count) {
+        this.count = count;
+    }
 }
