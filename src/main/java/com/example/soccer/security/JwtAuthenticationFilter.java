@@ -86,9 +86,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
     // userId로 받을 때
-    private void setAuthentication(String userId) {
+    private void setAuthentication(String email) {
         // userId를 이용해 Authentication 객체를 생성 후 SecurityContext에 설정
-        var userDetails = customUserDetailsService.loadUserByUsername(userId);
+        var userDetails = customUserDetailsService.loadUserByUsername(email);
         var authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

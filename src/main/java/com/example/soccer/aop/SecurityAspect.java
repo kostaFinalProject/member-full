@@ -19,13 +19,13 @@
 //public class SecurityAspect {
 //
 //    private final EntityValidationService entityValidationService;
-//    private static final ThreadLocal<Long> memberIdHolder = new ThreadLocal<>();
+//    private static final ThreadLocal<String> userIdHolder = new ThreadLocal<>();
 //
 //    @Around("execution(* kosta.gansikshop.controller.*.*(..)) && " +
 //            "!@annotation(kosta.gansikshop.aop.PublicApi) && " +
 //            "!@annotation(kosta.gansikshop.aop.MailApi) && " +
 //            "!@annotation(kosta.gansikshop.aop.TokenApi)")
-//    public Object injectMemberId(ProceedingJoinPoint joinPoint) throws Throwable {
+//    public Object injectUserId(ProceedingJoinPoint joinPoint) throws Throwable {
 //
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        if (authentication == null || !authentication.isAuthenticated()) {
@@ -35,18 +35,18 @@
 //        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 //        String userEmail = userDetails.getUsername();
 //
-//        Long memberId = entityValidationService.validateMemberByEmail(userEmail).getId();
+//        String userId = entityValidationService.validateMemberByUserId(userEmail).getId();
 //
-//        memberIdHolder.set(memberId);
+//        userIdHolder.set(userId);
 //
 //        try {
 //            return joinPoint.proceed();
 //        } finally {
-//            memberIdHolder.remove();
+//            userIdHolder.remove();
 //        }
 //    }
 //
-//    public static Long getCurrentMemberId() {
-//        return memberIdHolder.get();
+//    public static Long getCurrentUserId() {
+//        return userIdHolder.get();
 //    }
 //}

@@ -26,11 +26,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository; // 사용자 정보를 저장하는 리포지토리
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Member member = memberRepository.findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         return new CustomUserDetails(member);
     }
+
+//    // 이메일로 사용자 조회
+//    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+//        Member member = memberRepository.findByEmail(email) // 이메일로 사용자 조회
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+//        return new CustomUserDetails(member);
+//    }
 
 
 

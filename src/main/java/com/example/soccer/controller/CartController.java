@@ -18,12 +18,10 @@
 //
 //    private final CartService cartService;
 //
-//    /**
-//     * 장바구니 추가
-//     */
+//    /** 장바구니 추가 */
 //    @PostMapping
 //    public ResponseEntity<?> addCart(@RequestBody CartRequestDto cartRequestDto) {
-//        Long memberId = SecurityAspect.getCurrentMemberId();
+////        Long memberId = SecurityAspect.getCurrentMemberId();
 //
 //        boolean isNewCart = cartService.addCart(memberId, cartRequestDto);
 //        if (isNewCart) {
@@ -33,12 +31,10 @@
 //        }
 //    }
 //
-//    /**
-//     * 장바구니 항목 수량 업데이트
-//     */
+//    /** 장바구니 항목 수량 업데이트 */
 //    @PutMapping("/{cartItemId}")
 //    public ResponseEntity<String> updateCartItem(@PathVariable Long cartItemId, @RequestParam int count) {
-//        Long memberId = SecurityAspect.getCurrentMemberId();
+////        Long memberId = SecurityAspect.getCurrentMemberId();
 //
 //        // 수량이 1 미만으로 내려가지 않도록 처리
 //        if (count < 1) {
@@ -53,7 +49,7 @@
 //     */
 //    @DeleteMapping
 //    public ResponseEntity<String> deleteSelectedCarts(@RequestParam List<Long> cartItemIds) {
-//        Long memberId = SecurityAspect.getCurrentMemberId();
+////        Long memberId = SecurityAspect.getCurrentMemberId();
 //        cartService.deleteCartItems(memberId, cartItemIds);
 //        return ResponseEntity.status(HttpStatus.OK).body("선택한 상품들이 장바구니에서 제거되었습니다.");
 //    }
@@ -63,7 +59,7 @@
 //     */
 //    @GetMapping
 //    public ResponseEntity<?> getCartItems() {
-//        Long memberId = SecurityAspect.getCurrentMemberId();
+////        Long memberId = SecurityAspect.getCurrentMemberId();
 //        CartResponseDto cartItems = cartService.getCartItems(memberId);
 //        return ResponseEntity.status(HttpStatus.OK).body(cartItems);
 //    }

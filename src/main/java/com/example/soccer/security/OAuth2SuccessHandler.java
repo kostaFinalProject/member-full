@@ -17,7 +17,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
 //    private final TokenProvider tokenProvider;
-    private static final String URI = "http://127.0.0.1:5500/main.html";
+    private static final String URI = "http://127.0.0.1:5500/member_modify.html";
     // OAuth2 인증이 성공한 후 사용자를 리다이렉트할 클라이언트 애플리케이션(프론트엔드)의 URL
 
     @Override

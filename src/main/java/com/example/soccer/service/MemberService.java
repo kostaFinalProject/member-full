@@ -10,6 +10,7 @@ import com.example.soccer.dto.member.MemberUpdateFormDto;
 import com.example.soccer.repository.MemberRepository;
 import com.example.soccer.security.JwtUtil;
 import com.example.soccer.service.EntityValidationService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,10 +53,10 @@ public class MemberService {
         if (entityValidationService.existUserId(signCheckDto.getUserId())) {
             return false;  // 아이디 중복(true)되면 false 1 반환
         }
-        // 현재 비밀번호 확인 (비밀번호는 입력된 비밀번호와 암호화된 비밀번호를 비교)
-        if (!entityValidationService.existPassword(signCheckDto.getUserId(), signCheckDto.getPassword())) {
-            return false;  // 비밀번호 일치하면 false 1 반환
-        }
+//        // 현재 비밀번호 확인 (비밀번호는 입력된 비밀번호와 암호화된 비밀번호를 비교)
+//        if (!entityValidationService.existPassword(signCheckDto.getUserId(), signCheckDto.getPassword())) {
+//            return false;  // 비밀번호 일치하면 false 1 반환
+//        }
         // 현재 닉네임 확인
         if (entityValidationService.existNickname(signCheckDto.getNickname())) {
             return false;  // 닉네임 중복되면 false 1 반환
@@ -121,6 +122,12 @@ public class MemberService {
                 newAddress
         );
         memberRepository.save(findMember); // 저장하는 로직이 없었다. 보석씨의 활약으로 회원정보 수정 성공
+    }
+    /** 회원 탈퇴 */
+    @Transactional
+    public void deleteMember(String email) {
+        Member findMember = entityValidationService.validateMemberByEmail(email);
+        memberRepository.delete(findMember);
     }
 
     /** 로그인 */

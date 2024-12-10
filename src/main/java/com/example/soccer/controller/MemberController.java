@@ -1,5 +1,6 @@
 package com.example.soccer.controller;
 
+//import com.example.soccer.aop.SecurityAspect;
 import com.example.soccer.aop.TokenApi;
 import com.example.soccer.dto.login.LoginDto;
 import com.example.soccer.dto.login.LoginResponseDto;
@@ -55,6 +56,13 @@ public class MemberController {
                                           @RequestBody MemberUpdateFormDto updateFormDto) {
         memberService.updateMember(userId, updateFormDto);
         return ResponseEntity.status(HttpStatus.OK).body("회원 정보가 수정되었습니다.");
+    }
+    /** 회원탈퇴 */
+    @DeleteMapping("/{email}")
+    public ResponseEntity<?> deleteMember(@RequestBody String email) {
+//        Long userId = SecurityAspect.getCurrentUserId();
+        memberService.deleteMember(email);
+        return ResponseEntity.status(HttpStatus.OK).body("회원 탈퇴하였습니다.");
     }
     /** 로그인 */
     @PostMapping("/login")

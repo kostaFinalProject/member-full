@@ -78,7 +78,7 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
 //                        config.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5500"));
-                        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "https://kauth.kakao.com"));
+                        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:3000"));
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
